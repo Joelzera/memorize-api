@@ -10,6 +10,16 @@ app.use(bodyParser.urlencoded({ extended: true })) // permite aceitar requisiÃ§Ã
 app.use(bodyParser.json())
 
 
+app.get('/user/:id', async (req, res) => {
+    try {
+        const query = `SELECT * FROM users WHERE id = ?;`
+        const result = await mysql.execute(query, [req.params.id])
+        res.send(result)
+    } catch(error) {
+        res.send(error)
+    }   
+})
+
 
 app.post('/user', async (req, res) => {
     try {
@@ -17,9 +27,7 @@ app.post('/user', async (req, res) => {
             INSERT INTO users
                         (active, email, phone, name, last_name, picture, created_at)
                  VALUES (?, ?, ?, ?, ?, ?, ?);`
-        const resultado = await mysql.execute(
-            query,
-            [
+        const result = await mysql.execute(query, [
                 true,
                 req.body.email,  
                 req.body.phone,  
@@ -29,7 +37,7 @@ app.post('/user', async (req, res) => {
                 new Date().toISOString().slice(0, 19).replace('T', ' ')
             ]
         )
-        res.send(resultado)
+        res.send(result)
     } catch (error) {
         res.send(error)
     }
