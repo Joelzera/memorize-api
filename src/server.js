@@ -43,6 +43,35 @@ app.post('/user', async (req, res) => {
     }
 })
 
+app.put('/user/atualizar/:id' , async (req, res) =>{
+    try{
+        const query = `
+                       UPDATE users
+                          SET active = ?,
+                              email = ?,
+                              phone = ?,
+                              name = ?,
+                              last_name = ?,
+                              picture = ?,
+                              updated_at = ?
+                        WHERE id = ?;`
+        const result = await mysql.execute(query, [
+               req.body.active,
+               req.body.email,
+               req.body.phone,
+               req.body.name,
+               req.body.last_name,
+               req.body.picture,
+               new Date().toISOString().slice(0, 19).replace('T', ' '),
+               req.params.id
+            ]
+        )
+        res.send(result)
+    } catch (error) {
+        res.send(error)
+    }
+})
+
 app.listen(port, () => {
     console.log(`servidor rodando na porta ${port} `)
 })
