@@ -43,7 +43,7 @@ app.post('/user', async (req, res) => {
     }
 })
 
-app.put('/user/atualizar/:id' , async (req, res) =>{
+app.put('/user/:id' , async (req, res) =>{
     try{
         const query = `
                        UPDATE users
@@ -71,6 +71,17 @@ app.put('/user/atualizar/:id' , async (req, res) =>{
         res.send(error)
     }
 })
+
+app.delete('/user/:id', async (req, res) =>{
+    try{
+        const query = `DELETE FROM users WHERE id = ?;`
+        const result = await mysql.execute(query, [req.params.id])
+        res.send(result)
+    } catch (error) {
+        res.send(error)
+    }
+})
+
 
 app.listen(port, () => {
     console.log(`servidor rodando na porta ${port} `)
