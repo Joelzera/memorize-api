@@ -1,4 +1,4 @@
-const mysql = require('../config/db.config')
+const mysql = require('../config/mysql.config')
 
 
 exports.getUsers = async (req, res) => {
