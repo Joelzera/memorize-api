@@ -1,22 +1,11 @@
 const express = require('express')
+const { insert, find, update, deleteById } = require('../controllers/folder')
 const router = express.Router()
 
 
-router.get('/folder/:id', (req, res) => {
-    console.log('folder')
-    res.send(req.params.id)
-})
-
-router.post('/folder', (req, res) =>{
-    res.send('metodo post')
-})
-
-router.patch('/folder' , (req, res) =>{
-    res.send('metodo de update')
-})
-
-router.delete('/folder/:id', (req, res) =>{
-    res.send('metodo de deletar')
-})
+router.get('/folder/:id', find)
+router.post('/folder', insert)
+router.patch('/folder/:id' , update)
+router.delete('/folder/:id', deleteById)
 
 module.exports = router
