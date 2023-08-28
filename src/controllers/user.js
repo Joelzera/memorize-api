@@ -11,17 +11,32 @@ exports.getUsers = async (req, res) => {
     }   
 }
 
+exports.login = async (req, res) => {
+    try {
+        const query = `SELECT * FROM users WHERE email = ? && password = ?;`
+        const result = await mysql.execute(query, [req.body.email, req.body.password])
+        console.log(result)
+        if (result[0].password === req.body.password) {
+            res.status(200).json('autorizado')
+        } else {
+            res.status(401).json('nao autorizado')
+        }
+    } catch (error) {
+        res.send(error)
+    }
+}
+
 exports.create = async (req, res) => {
     try {
         const query = `
             INSERT INTO users
-                        (active, email, phone, name, last_name, picture, created_at)
+                        (active, email, name, password, last_name, picture, created_at)
                  VALUES (?, ?, ?, ?, ?, ?, ?);`
         const result = await mysql.execute(query, [
                 true,
-                req.body.email,  
-                req.body.phone,  
-                req.body.name,  
+                req.body.email,    
+                req.body.name,
+                req.body.password,  
                 req.body.last_name,  
                 req.body.picture,  
                 new Date().toISOString().slice(0, 19).replace('T', ' ')
@@ -39,7 +54,6 @@ exports.update = async (req, res) =>{
                        UPDATE users
                           SET active = ?,
                               email = ?,
-                              phone = ?,
                               name = ?,
                               last_name = ?,
                               picture = ?,
@@ -48,7 +62,6 @@ exports.update = async (req, res) =>{
         const result = await mysql.execute(query, [
                req.body.active,
                req.body.email,
-               req.body.phone,
                req.body.name,
                req.body.last_name,
                req.body.picture,
