@@ -1,5 +1,6 @@
 const mysql = require('../config/mysql.config')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 exports.getUsers = async (req, res) => {
     try {
@@ -17,9 +18,13 @@ exports.login = async (req, res) => {
         const result = await mysql.execute(query, [req.body.email, req.body.password])
         console.log(result)
         if (result[0].password === req.body.password) {
-            res.status(200).json('autorizado')
+            const token = jwt.sign({
+                id: result.id,
+                email: req.body.email
+            }, process.env.SECRET, {expiresIn: '8d'})
+            res.status(200).json({msg:"autorizado", token})
         } else {
-            res.status(401).json('nao autorizado')
+            res.status(400).json({msg:"nao autorizado"})
         }
     } catch (error) {
         res.send(error)
