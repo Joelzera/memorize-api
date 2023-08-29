@@ -1,5 +1,5 @@
 const mysql = require('../config/mysql.config')
-
+const bcrypt = require('bcrypt')
 
 exports.getUsers = async (req, res) => {
     try {
@@ -28,6 +28,8 @@ exports.login = async (req, res) => {
 
 exports.create = async (req, res) => {
     try {
+        const saltRounds = 10
+        const hash = bcrypt.hashSync(req.body.password, saltRounds)
         const query = `
             INSERT INTO users
                         (active, email, name, password, last_name, picture, created_at)
@@ -36,7 +38,7 @@ exports.create = async (req, res) => {
                 true,
                 req.body.email,    
                 req.body.name,
-                req.body.password,  
+                hash,  
                 req.body.last_name,  
                 req.body.picture,  
                 new Date().toISOString().slice(0, 19).replace('T', ' ')
