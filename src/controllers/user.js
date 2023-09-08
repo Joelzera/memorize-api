@@ -14,10 +14,11 @@ exports.getUsers = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-        const query = `SELECT * FROM users WHERE email = ? && password = ?;`
-        const result = await mysql.execute(query, [req.body.email, req.body.password])
-        console.log(result)
-        if (result[0].password === req.body.password) {
+        const query = `SELECT * FROM users WHERE email = ?;`
+        const result = await mysql.execute(query, [req.body.email])
+        console.log(typeof req.body.password)
+        console.log(bcrypt.compareSync(req.body.password, result[0].password))
+        if (bcrypt.compareSync(result[0].password, req.body.password)) {
             const token = jwt.sign({
                 id: result.id,
                 email: req.body.email
