@@ -18,7 +18,7 @@ exports.login = async (req, res) => {
         const result = await mysql.execute(query, [req.body.email])
         console.log(typeof req.body.password)
         console.log(bcrypt.compareSync(req.body.password, result[0].password))
-        if (bcrypt.compareSync(result[0].password, req.body.password)) {
+        if (bcrypt.compareSync(req.body.password, result[0].password)) {
             const token = jwt.sign({
                 id: result.id,
                 email: req.body.email
