@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 
 const dataSchema = new mongoose.Schema({
     id: { type: String },
-    idUser: { type: String },
+    idUser: { type: Number },
     name: { type: String },
     annotationIds: { type: [String] },
     createdAt: { type: Date },

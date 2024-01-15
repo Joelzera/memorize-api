@@ -11,6 +11,15 @@ exports.find = async (req, res) =>{
         res.status(500).json({ message: error.message })
     }
 }
+exports.findByIdUser = async (req, res) =>{
+    try {
+        const data = await Folder.find({ idUser: req.params.idUser })
+        console.log(data)
+        res.json(data)
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}
 
 exports.insert = async (req, res) => {
     const data = new Folder({
