@@ -6,6 +6,7 @@ exports.getUsers = async (req, res) => {
     try {
         const query = `SELECT * FROM users WHERE id = ?;`
         const result = await mysql.execute(query, [req.params.id])
+        console.log(result)
         res.send(result)
     } catch(error) {
         res.send(error)
@@ -16,16 +17,15 @@ exports.login = async (req, res) => {
     try {
         const query = `SELECT * FROM users WHERE email = ?;`
         const result = await mysql.execute(query, [req.body.email])
-        console.log(typeof req.body.password)
-        console.log(bcrypt.compareSync(req.body.password, result[0].password))
+
         if (bcrypt.compareSync(req.body.password, result[0].password)) {
             const token = jwt.sign({
-                id: result.id,
+                 id: result.id,
                 email: req.body.email
             }, process.env.SECRET, {expiresIn: '8d'})
-            res.status(200).json({msg:"autorizado", token})
+            res.status(200).json({ msg:"autorizado", id: result[0].id, token })
         } else {
-            res.status(400).json({msg:"nao autorizado"})
+            res.status(400).json({ msg:"nao autorizado" })
         }
     } catch (error) {
         res.send(error)
