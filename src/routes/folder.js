@@ -3,7 +3,6 @@ const { insert, find, update, deleteById, findByIdUser } = require('../controlle
 const router = express.Router()
 const Middeware = require('../middleware/login.middleware')
 
-
 router.get('/folder/:id', Middeware.required, find)
 router.get('/folders/:idUser', Middeware.required, findByIdUser)
 router.post('/folder', Middeware.required, insert)

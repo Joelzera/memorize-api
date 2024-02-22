@@ -11,6 +11,7 @@ exports.find = async (req, res) =>{
         res.status(500).json({ message: error.message })
     }
 }
+
 exports.findByIdUser = async (req, res) =>{
     try {
         const data = await Folder.find({ idUser: req.params.idUser })
@@ -24,7 +25,7 @@ exports.findByIdUser = async (req, res) =>{
 exports.insert = async (req, res) => {
     const data = new Folder({
         id: uuid4(),
-        idUser: req.body.id,
+        idUser: req.body.idUser,
         annotationIds: [],
         name: req.body.name,
         createdAt: new Date().toISOString().slice(0, 19).replace('T', ' '),

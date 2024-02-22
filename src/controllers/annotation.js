@@ -12,10 +12,20 @@ exports.find = async (req, res) =>{
     }
 }
 
+exports.findByIdFolder = async (req, res) =>{
+    try {
+        const data = await Annotation.find({ idFolder: req.params.idFolder })
+        console.log(data)
+        res.json(data)
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
 exports.insert = async (req, res) =>{
     const data = new Annotation({
         id: uuid4(),
-        idFolder: req.body.id,
+        idFolder: req.body.idFolder,
         title: req.body.title,
         text: req.body.text,
         createdAt: new Date().toISOString().slice(0, 19).replace('T', ' '),
