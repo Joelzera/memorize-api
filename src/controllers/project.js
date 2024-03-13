@@ -1,4 +1,6 @@
 const db = require('../config/mongo.config')
+const annotation = require('../models/annotation')
+const Folder = require('../models/folder')
 const Project = require('../models/project')
 const {v4: uuid4} = require('uuid')
 
@@ -14,8 +16,25 @@ exports.find = async (req, res) =>{
 
 exports.findByIdUser = async (req, res) =>{
     try {
+        let userProjects = []
         const data = await Project.find({ idUser: req.params.idUser })
-        res.json(data)
+        if(data.length > 0){
+            data.forEach( async (element) =>  {               
+                const project = { id: element.id, name: element.name, folders: [] }
+                const folders = await Folder.find({ idProject: element.id })
+                console.log(folders)
+                project.folders = await folders.forEach(item => project.folders.push({
+                    id: item.id,
+                    name: item.name,
+                    annotationIds: item.annotationIds
+                }))
+                userProjects.push(project) 
+                console.log(userProjects)
+               
+            });
+        }
+        //const data2 = await folder.find({ idProject: req.params.idProject })
+        return res.json({ data: userProjects})
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
