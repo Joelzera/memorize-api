@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 
 const dataSchema = new mongoose.Schema({
     id: { type: String },
-    idFolder: { type: String },
+    idFolder: { type: Number },
     title: { type: String },
     text: { type: String },
     createdAt: { type: Date },
