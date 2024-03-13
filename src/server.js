@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const userRoutes = require('./routes/user')
 const folderRoutes = require('./routes/folder')
 const annotationRoutes = require('./routes/annotation')
+const projectRoutes = require('./routes/project')
 const cors = require('cors')
 const app = express()
 const port = process.env.SERVER_PORT || 5000
@@ -20,6 +21,7 @@ app.use(cors({
 app.use('/', userRoutes)
 app.use('/', folderRoutes)
 app.use('/', annotationRoutes)
+app.use('/', projectRoutes)
 
 
 app.listen(port, () => {
