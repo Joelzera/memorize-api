@@ -1,5 +1,5 @@
 const db = require('../config/mongo.config')
-const annotation = require('../models/annotation')
+const Annotation = require('../models/annotation')
 const Folder = require('../models/folder')
 const Project = require('../models/project')
 const {v4: uuid4} = require('uuid')
@@ -19,22 +19,29 @@ exports.findByIdUser = async (req, res) =>{
         let userProjects = []
         const data = await Project.find({ idUser: req.params.idUser })
         if(data.length > 0){
-            data.forEach( async (element) =>  {               
+            for(const element of data) {               
                 const project = { id: element.id, name: element.name, folders: [] }
                 const folders = await Folder.find({ idProject: element.id })
-                console.log(folders)
-                project.folders = await folders.forEach(item => project.folders.push({
-                    id: item.id,
-                    name: item.name,
-                    annotationIds: item.annotationIds
-                }))
+                for(const folder of folders){
+                    const annotation = await Annotation.find({ idFolder: folder.id })
+                    const FolderAnnotation = {
+                        id : folder.id,
+                        annotationIds : folder.annotationIds,
+                        name: folder.name,
+                        annotations : []
+                    }
+                    FolderAnnotation.annotations = annotation.map(item =>({
+                        id: item.id,
+                        title: item.title,
+                        text: item.text
+                    }))
+                    project.folders.push(FolderAnnotation)
+                }
                 userProjects.push(project) 
-                console.log(userProjects)
-               
-            });
+                console.log(userProjects)              
+            };
         }
-        //const data2 = await folder.find({ idProject: req.params.idProject })
-        return res.json({ data: userProjects})
+        return res.json({ data: userProjects })
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
